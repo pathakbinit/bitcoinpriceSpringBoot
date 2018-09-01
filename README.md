@@ -1,4 +1,4 @@
-# Bitcoin statistics 
+# Bitcoin Statistics Application
 
 This application provides users some published API for getting AVERAGE, MEDIAN, HIGHEST bitcoin price for last X minutes.
 There are thre APIs present in the application:
