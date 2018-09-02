@@ -3,13 +3,17 @@ package com.moneytap.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.moneytap.entity.BitcoinPriceResponse;
+import com.moneytap.entity.SearchResponse;
 import com.moneytap.helper.BitcoinpriceComparator;
 
 @Service
 public class BitcoinpriceFunctions implements IBitcoinpriceFunctions {
+	private Logger log = LoggerFactory.getLogger(BitcoinpriceFunctions.class);
 
 	@Override
 	public Double getAvg(List<BitcoinPriceResponse> bitcoinStatistics) {
@@ -17,7 +21,9 @@ public class BitcoinpriceFunctions implements IBitcoinpriceFunctions {
 		for (BitcoinPriceResponse bitcoinPriceResponse : bitcoinStatistics) {
 			avgBitcoinPrice += bitcoinPriceResponse.getPrice_close();
 		}
-		return avgBitcoinPrice / bitcoinStatistics.size();
+		Double avgPrice = avgBitcoinPrice / bitcoinStatistics.size();
+		log.debug("Returned avg price {}", avgPrice);
+		return avgPrice;
 	}
 
 	@Override
@@ -31,14 +37,27 @@ public class BitcoinpriceFunctions implements IBitcoinpriceFunctions {
 		} else {
 			median = bitcoinStatistics.get(size / 2).getPrice_close();
 		}
+		log.debug("Returned median {}", median);
 		return median;
 	}
 
 	@Override
 	public Double getHighestPrice(List<BitcoinPriceResponse> prices) {
 		Collections.sort(prices, new BitcoinpriceComparator());
-		System.out.println(prices);
+		log.debug("Sorted bitcoin data {}", prices);
 		return prices.get(0).getPrice_close();
+	}
+
+	@Override
+	public SearchResponse getBitcoinPrice(List<BitcoinPriceResponse> bitcoinPrice) {
+		Collections.sort(bitcoinPrice, new BitcoinpriceComparator());
+		SearchResponse response = new SearchResponse();
+		for (BitcoinPriceResponse bitcoinPriceResponse : bitcoinPrice) {
+			response.setDateTime(bitcoinPriceResponse.getTime_close());
+			response.setBitcoinPrice(bitcoinPriceResponse.getPrice_close());
+		}
+		log.debug("Response {}", response.toString());
+		return response;
 	}
 
 }

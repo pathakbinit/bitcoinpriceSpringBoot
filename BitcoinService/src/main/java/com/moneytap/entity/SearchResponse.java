@@ -1,35 +1,29 @@
 package com.moneytap.entity;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
+public class SearchResponse {
 
-public class SearchResponse extends HttpResponseStatus {
-	public SearchResponse(int code, String reasonPhrase) {
-		super(code, reasonPhrase);
-		// TODO Auto-generated constructor stub
+	private String dateTime;
+	private Double bitcoinPrice;
+
+	public String getDateTime() {
+		return dateTime;
 	}
 
-	private Double avg;
-	private Double median;
-
-	public Double getAvg() {
-		return avg;
+	public void setDateTime(String dateTime) {
+		this.dateTime = dateTime;
 	}
 
-	public void setAvg(Double avg) {
-		this.avg = avg;
+	public Double getBitcoinPrice() {
+		return bitcoinPrice;
 	}
 
-	public Double getMedian() {
-		return median;
-	}
-
-	public void setMedian(Double median) {
-		this.median = median;
+	public void setBitcoinPrice(Double bitcoinPrice) {
+		this.bitcoinPrice = bitcoinPrice;
 	}
 
 	@Override
 	public String toString() {
-		return "SearchResponse [avg=" + avg + ", median=" + median + "]";
+		return "SearchResponse [dateTime=" + dateTime + ", bitcoinPrice=" + bitcoinPrice + "]";
 	}
 
 }

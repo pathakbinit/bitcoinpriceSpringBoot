@@ -15,70 +15,56 @@ import com.moneytap.entity.SearchResponse;
 import com.moneytap.helper.BitcoinpriceHelper;
 import com.moneytap.service.IBitcoinpriceFunctions;
 
-import io.netty.handler.codec.http.HttpResponseStatus;
-
 @RestController
-public class BitcoinPriceGetResource {
+public class BitcoinPriceGetResource extends BitcoinpriceHelper {
 
 	private Logger log = LoggerFactory.getLogger(BitcoinPriceGetResource.class);
 	@Autowired
 	private IBitcoinpriceFunctions bitcoinpriceFunctions;
 
-	BitcoinpriceHelper bitcoinpriceHelper = new BitcoinpriceHelper();
-
 	@GetMapping("/average/{time}")
-	public SearchResponse getBitcoinAverage(@PathVariable String time) throws IOException {
-
-		SearchResponse response = null;
+	public String getBitcoinAverage(@PathVariable String time) throws IOException {
 		try {
-			List<BitcoinPriceResponse> bitcoinStatistics = bitcoinpriceHelper.getBitcoinPriceInTimeInterval(time);
+			List<BitcoinPriceResponse> bitcoinStatistics = getBitcoinPriceInTimeInterval(time);
 			Double avg = bitcoinpriceFunctions.getAvg(bitcoinStatistics);
 			log.debug("Average computed {}", avg);
-			if (avg == 0) {
-				response = new SearchResponse(HttpResponseStatus.OK.code(), "Average value is zero");
-			} else {
-				response = new SearchResponse(HttpResponseStatus.ACCEPTED.code(), "Got the average value");
-				response.setAvg(avg);
-			}
-			return response;
+			return "Average bitcoin price for last " + time + " mins is " + avg;
 		} catch (Exception exception) {
-			response = new SearchResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR.code(), "Check for valid data");
-			return response;
+			return "Cannot process the request";
 		}
 	}
 
 	@GetMapping("/median/{time}")
-	public SearchResponse getBitcoinMedian(@PathVariable String time) throws IOException {
-
-		SearchResponse response = null;
+	public String getBitcoinMedian(@PathVariable String time) throws IOException {
 		try {
-			List<BitcoinPriceResponse> bitcoinStatistics = bitcoinpriceHelper.getBitcoinPriceInTimeInterval(time);
+			List<BitcoinPriceResponse> bitcoinStatistics = getBitcoinPriceInTimeInterval(time);
 			Double median = bitcoinpriceFunctions.getMedian(bitcoinStatistics);
 			log.debug("Median computed {}", median);
-			if (median == 0) {
-				response = new SearchResponse(HttpResponseStatus.OK.code(), "Median value is zero");
-			} else {
-				response = new SearchResponse(HttpResponseStatus.ACCEPTED.code(), "Got the median value");
-				response.setMedian(median);
-			}
-			return response;
+			return "Median bitcoin price for last " + time + " mins is " + median;
 		} catch (Exception exception) {
-			response = new SearchResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR.code(), "Check for valid data");
-			return response;
+			return "Cannot process the request";
 		}
 	}
 
 	@GetMapping("/highest/{time}")
-	public Double getHighestPrice(@PathVariable String time) {
+	public String getHighestPrice(@PathVariable String time) {
 		try {
-			List<BitcoinPriceResponse> bitcoinStatistics = bitcoinpriceHelper.getBitcoinPriceInTimeInterval(time);
+			List<BitcoinPriceResponse> bitcoinStatistics = getBitcoinPriceInTimeInterval(time);
 			Double highestPrice = bitcoinpriceFunctions.getHighestPrice(bitcoinStatistics);
-			return highestPrice;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "Highest bitcoin price for last " + time + " mins is " + highestPrice;
+		} catch (Exception e) {
+			return "Cannot process the request";
 		}
-		return null;
+	}
 
+	@GetMapping("/price/{time}")
+	public SearchResponse getBitcoinPrice(@PathVariable String time) throws Exception {
+		try {
+			List<BitcoinPriceResponse> bitcoinPrice = getBitcoinPriceInTimeInterval(time);
+			SearchResponse response = bitcoinpriceFunctions.getBitcoinPrice(bitcoinPrice);
+			return response;
+		} catch (Exception ex) {
+			throw new Exception("No data availbale");
+		}
 	}
 }
