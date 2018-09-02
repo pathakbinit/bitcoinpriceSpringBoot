@@ -1,10 +1,11 @@
 # Bitcoin Statistics Application
 
 This application provides users some published API for getting AVERAGE, MEDIAN, HIGHEST bitcoin price for last X minutes.
-There are thre APIs present in the application:
+There are four APIs present in the application:
 1) "/average/{time}" -> this api gives average of bitcoin price for last X minutes
 2) "/median/{time}"  -> this api gives median of bitcoin price for last X minutes
 3) "/highest/{time}" -> this api gives highest price or peek price value in last X minutes
+4) "/price/{time}"  -> this api gives bitcoin prices for every 1 minute interval 
 
 
 Application Design:
@@ -30,3 +31,4 @@ To access the api user need to use :
 1) "/api/bitcoin/average/{time}"
 2) "/api/bitcoin/median/{time}"
 3) "/api/bitcoin/highest/{time}"
+4) "/api/bitcoin/price/{time}"
