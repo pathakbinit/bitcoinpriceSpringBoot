@@ -58,10 +58,10 @@ public class BitcoinPriceGetResource extends BitcoinpriceHelper {
 	}
 
 	@GetMapping("/price/{time}")
-	public SearchResponse getBitcoinPrice(@PathVariable String time) throws Exception {
+	public List<SearchResponse> getBitcoinPrice(@PathVariable String time) throws Exception {
 		try {
 			List<BitcoinPriceResponse> bitcoinPrice = getBitcoinPriceInTimeInterval(time);
-			SearchResponse response = bitcoinpriceFunctions.getBitcoinPrice(bitcoinPrice);
+			List<SearchResponse> response = bitcoinpriceFunctions.getBitcoinPrice(bitcoinPrice);
 			return response;
 		} catch (Exception ex) {
 			throw new Exception("No data availbale");

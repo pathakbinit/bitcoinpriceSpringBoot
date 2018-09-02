@@ -1,5 +1,6 @@
 package com.moneytap.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,12 +50,14 @@ public class BitcoinpriceFunctions implements IBitcoinpriceFunctions {
 	}
 
 	@Override
-	public SearchResponse getBitcoinPrice(List<BitcoinPriceResponse> bitcoinPrice) {
+	public List<SearchResponse> getBitcoinPrice(List<BitcoinPriceResponse> bitcoinPrice) {
+		List<SearchResponse> response = new ArrayList<>();
 		Collections.sort(bitcoinPrice, new BitcoinpriceComparator());
-		SearchResponse response = new SearchResponse();
 		for (BitcoinPriceResponse bitcoinPriceResponse : bitcoinPrice) {
-			response.setDateTime(bitcoinPriceResponse.getTime_close());
-			response.setBitcoinPrice(bitcoinPriceResponse.getPrice_close());
+			SearchResponse searchResponse = new SearchResponse();
+			searchResponse.setDateTime(bitcoinPriceResponse.getTime_close());
+			searchResponse.setBitcoinPrice(bitcoinPriceResponse.getPrice_close());
+			response.add(searchResponse);
 		}
 		log.debug("Response {}", response.toString());
 		return response;

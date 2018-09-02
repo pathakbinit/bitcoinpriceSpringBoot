@@ -45,5 +45,5 @@ public interface IBitcoinpriceFunctions {
 	 * @param bitcoinPrice
 	 * @return
 	 */
-	SearchResponse getBitcoinPrice(List<BitcoinPriceResponse> bitcoinPrice);
+	List<SearchResponse> getBitcoinPrice(List<BitcoinPriceResponse> bitcoinPrice);
 }
